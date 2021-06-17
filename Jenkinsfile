@@ -14,13 +14,17 @@ pipeline {
       }
     }
 
-    stage('test') {
-      agent {
-        docker {
-          image 'maven:3.6.3-jdk-11-slim'
-        }
-
-      }
+   stage('Deploy to Dev') {
+ when {
+ beforeAgent true
+ branch 'master'
+ }
+ agent any
+ steps {
+ echo 'Deploying to Dev Compose'
+ sh 'docker-compose up -d'
+ }
+ }
       steps {
         echo 'running unit tests'
         sh 'mvn clean test'
