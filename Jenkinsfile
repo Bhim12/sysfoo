@@ -33,15 +33,10 @@ pipeline {
     }
 
     stage('package') {
-      when {
+      when { beforeAgent true
                 branch 'production'
             }
-      agent {
-        docker {
-          image 'maven:3.6.3-jdk-11-slim'
-        }
-
-      }
+      agent any
       steps {
         echo 'packaging app to generate artifacts'
         sh 'mvn package -DskipTests'
@@ -50,9 +45,10 @@ pipeline {
     }
 
     stage('Docker BnP.') {
-      when {
+     when { beforeAgent true
                 branch 'production'
             }
+      agent any
       steps {
         script {
           docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
